@@ -1,64 +1,94 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" style="height: 100%;">
 <head>
-    <title>Page Title</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Include Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <title>Document</title>
 </head>
-<body>
-
-<h1>Speech to Text AI Services</h1>
-<p>My first paragraph.</p>
-<button id="startButton">Start Recording</button>
-<button id="stopButton">Stop Recording</button>
-<progress id="progressBar" value="0" max="30"></progress>
-<p id="recognizedText"></p>
-
-<script>
-    let mediaRecorder;
-    let chunks = [];
-    
-    document.getElementById('stopButton').addEventListener('click', function() {
-        mediaRecorder.stop();
-        mediaRecorder.stream.getTracks().forEach(track => track.stop());
-    });
-
-    document.getElementById('startButton').addEventListener('click', function() {
-      navigator.mediaDevices.getUserMedia({ audio: true })
-        .then(stream => {
-          mediaRecorder = new MediaRecorder(stream);
-          mediaRecorder.start();
-
-          mediaRecorder.ondataavailable = e => {
-            chunks.push(e.data);
-          };
-
-          mediaRecorder.onstop = e => {
-            let blob = new Blob(chunks, { 'type' : 'audio/wav; codecs=0' });
-            chunks = [];
-            let formData = new FormData();
-            formData.append('file', blob);
-
-            fetch('/audio', {
-              method: 'POST',
-              body: formData
-            }).then(response => response.json())
-            .then(data => { document.getElementById('recognizedText').innerText = data; });
-          };
-        });
-        
-        let progressBar = document.getElementById('progressBar');
-        progressBar.value = 0;
-        let intervalId = setInterval(function() {
-            progressBar.value += 1;
-            if (progressBar.value >= 30) {
-                clearInterval(intervalId);
-            }
-        }, 1000);  // Update every second
-
-        // setTimeout(function() {
-        //     mediaRecorder.stop();
-        // }, 30000);  // Stop recording after 30 seconds
-    });
-</script>
-
+<body style="height: 100%; display: flex; flex-direction: column;">
+  <!-- Navigation Bar -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">Navbar</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item active">
+          <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+        </li>
+        <!-- Add more links here -->
+      </ul>
+    </div>
+  </nav>
+  <div class="container-fluid" style="flex: 1;">
+      <div class="row">
+          <div class="col-md-4">
+            <button id="startButton">Start Recording</button>
+            <progress id="progressBar" value="0" max="30"></progress>
+          </div>
+          <div class="col-md-4">
+              <button id="stopButton">Stop Recording</button>
+          </div>
+          <div class="col-md-4">
+            <p id="recognizedText"></p>
+          </div>
+      </div>
+  </div>
+  <script>
+      let mediaRecorder;
+      let chunks = [];
+      
+      document.getElementById('stopButton').addEventListener('click', function() {
+          mediaRecorder.stop();
+          mediaRecorder.stream.getTracks().forEach(track => track.stop());
+      });
+  
+      document.getElementById('startButton').addEventListener('click', function() {
+        navigator.mediaDevices.getUserMedia({ audio: true })
+          .then(stream => {
+            mediaRecorder = new MediaRecorder(stream);
+            mediaRecorder.start();
+  
+            mediaRecorder.ondataavailable = e => {
+              chunks.push(e.data);
+            };
+  
+            mediaRecorder.onstop = e => {
+              let blob = new Blob(chunks, { 'type' : 'audio/wav; codecs=0' });
+              chunks = [];
+              let formData = new FormData();
+              formData.append('file', blob);
+  
+              fetch('/audio', {
+                method: 'POST',
+                body: formData
+              }).then(response => response.json())
+              .then(data => { document.getElementById('recognizedText').innerText = data; });
+            };
+          });
+          
+          let progressBar = document.getElementById('progressBar');
+          progressBar.value = 0;
+          let intervalId = setInterval(function() {
+              progressBar.value += 1;
+              if (progressBar.value >= 30) {
+                  clearInterval(intervalId);
+              }
+          }, 1000);  // Update every second
+  
+          // setTimeout(function() {
+          //     mediaRecorder.stop();
+          // }, 30000);  // Stop recording after 30 seconds
+      });
+  </script>
+  <!-- Footer -->
+  <footer class="footer mt-auto py-3 bg-light">
+    <div class="container">
+      <span class="text-muted">Place sticky footer content here.</span>
+    </div>
+  </footer>
 </body>
 </html>

@@ -9,7 +9,7 @@ import logging
 LOGGER_NAME = "SPEECH-SVC"
 load_dotenv()
 
-logging.basicConfig(filename='app.log', filemode='w', format='%(name)s - %(levelname)s - %(message)s', level=logging.DEBUG)
+logging.basicConfig(filename='app.log', filemode='w', format='%(asctime)s %(name)s - %(levelname)s - %(message)s', level=logging.DEBUG)
 logger = logging.getLogger(LOGGER_NAME)
 current_path = Path(__file__).absolute().parent
 AUDIO_OUTPUT_PATH = Path(current_path / str(os.environ.get('AUDIO_OUTPUT_PATH')))
