@@ -1,11 +1,12 @@
-import os
-import azure.cognitiveservices.speech as speechsdk
 from dotenv import load_dotenv
 from pathlib import Path
+from core.const import LOGGER_NAME, KEY, REGION
+
+import os
+import azure.cognitiveservices.speech as speechsdk
 import wave
 import logging
 
-LOGGER_NAME = "SPEECH-SVC"
 
 logger = logging.getLogger(LOGGER_NAME)
 
@@ -34,8 +35,8 @@ def delete_file(path:str):
 
 def recognize_from_audio_file(path:str) -> str:
     try:
-        key = os.environ.get('SPEECH_KEY')
-        region = os.environ.get('SPEECH_REGION')
+        key = KEY
+        region = REGION
         speech_config = speechsdk.SpeechConfig(subscription=key, region=region)
         speech_config.speech_recognition_language="en-US"
         

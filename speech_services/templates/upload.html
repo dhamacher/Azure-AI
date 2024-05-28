@@ -1,0 +1,20 @@
+<!-- upload.html -->
+{% extends 'layout.html' %}
+
+{% block title %}Upload Audio File{% endblock %}
+
+{% block content %}
+    <h1>File Upload</h1>
+    <form action="/upload" method="post" enctype="multipart/form-data">
+        <input type="file" name="file">
+        <input type="submit" value="Upload">
+    </form>
+    <p>{{ message }}</p>
+    {% if file_url %}
+        <h2>Uploaded File:</h2>
+        <audio controls>
+            <source src="{{ file_url }}" type="audio/wav">
+            Your browser does not support the audio element.
+        </audio>
+    {% endif %}
+{% endblock %}
